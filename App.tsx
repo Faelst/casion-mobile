@@ -4,6 +4,8 @@ import AppLoading from 'expo-app-loading'
 import Routers from './src/routes/index'
 import { NavigationProvider } from "./src/context/Navgation"
 
+import { Loading } from './src/components/loading/Loading';
+
 import {
   useFonts,
   PTSerif_400Regular,
@@ -23,8 +25,8 @@ export default function App() {
   })
 
   if (!fontLoaded)
-    return <AppLoading />
-
+    return <Loading />
+  
   return (
     <NavigationProvider>
       <Routers />

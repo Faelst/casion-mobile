@@ -11,25 +11,35 @@ import { useNavigation } from '@react-navigation/core'
 import NavContext from "../../context/Navgation"
 import { api } from '../../services/api'
 import { newsInterface } from '../../interfaces'
+import { Loading } from '../../components/loading/Loading'
 
 export function Reading() {
     const navigation = useNavigation()
     const [news, setNews] = useState({} as newsInterface)
+    const [isReady, setIsReady] = useState<Boolean>(false)
 
     const { _id } = useContext(NavContext)
 
     const handleGoBackView = () => {
+        setNews({} as newsInterface)
         navigation.goBack();
     }
 
     useEffect(() => {
         api.get(`/news/${_id}`)
             .then(resp => resp)
-            .then(resp => setNews(resp['data']['news']))
+            .then(resp => {
+                setNews(resp['data']['news'])
+                setIsReady(true)
+            })
             .catch(error => console.log(error))
     }, [_id])
 
+
     return (
+        !isReady ? 
+        <Loading /> 
+        :
         <Container>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backPageView} onPress={handleGoBackView}>
@@ -39,7 +49,7 @@ export function Reading() {
             </View>
             <View style={styles.readingCard}>
                 <View>
-                    <Image style={styles.image} source={{uri: `https://casion-api.herokuapp.com/static/files${news.banner_img}` }} />
+                    <Image style={styles.image} source={{ uri: `https://casion-api.herokuapp.com/static/files${news.banner_img}` }} />
                     <Chip title={news.highlight ? "DESTAQUE" : news.headline} />
                     <Text style={styles.readingCardtitle}>{news.title}</Text>
                     <View style={styles.readingCardSubtitleCard}>

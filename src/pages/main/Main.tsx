@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/core'
 import NavContext from "../../context/Navgation"
 import { newsInterface } from '../../interfaces'
 import AppLoading from 'expo-app-loading'
+import { Loading } from '../../components/loading/Loading'
 
 export function Main() {
     const [newsList, setNewsList] = useState([] as Array<newsInterface>)
@@ -43,7 +44,7 @@ export function Main() {
     }
 
     if (!newsList.length)
-        return <AppLoading />
+        return <Loading />
 
 
     return (
