@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/core'
 
 import NavContext from "../../context/Navgation"
 import { newsInterface } from '../../interfaces'
+import AppLoading from 'expo-app-loading'
 
 export function Main() {
     const [newsList, setNewsList] = useState([] as Array<newsInterface>)
@@ -29,17 +30,21 @@ export function Main() {
         apiGraphql.post('',
             { "query": "query {\n  news{ _id title headline highlight small_img banner_img }\n}" }
         )
-        .then((result) => {
-            const { data } = result.data
-            setNewsList(data.news)
-            setNewsHighLights(data.news.filter((news: newsInterface) => news.highlight).shift())
-        });
+            .then((result) => {
+                const { data } = result.data
+                setNewsList(data.news)
+                setNewsHighLights(data.news.filter((news: newsInterface) => news.highlight).shift())
+            });
     }, [])
 
     const readingHighlightsNews = (_id: String) => {
         setNewIdProvider(_id)
         navigation.navigate("Reading")
     }
+
+    if (!newsList.length)
+        return <AppLoading />
+
 
     return (
         <Container>
